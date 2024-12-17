@@ -1,18 +1,50 @@
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-
-import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-
-export const metadata: Metadata = {
-  title: "Next.js SignUp Page | TailAdmin - Next.js Dashboard Template",
-  description: "This is Next.js SignUp Page TailAdmin Dashboard Template",
-  // other metadata
-};
+import { initialSignupFormData, SignupFormData } from "@/utils/formDatas";
 
 const SignUp: React.FC = () => {
+  const [formData, setFormData] = useState<SignupFormData>(
+    initialSignupFormData,
+  );
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("Form data", formData);
+    // if (formData.password !== formData.rePassword) {
+    //   return;
+    // }
+    try {
+      console.log(12332131);
+      const res = await fetch("http://localhost:3001/api/v1/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+      console.log("Data", data);
+      if (data.success) {
+        // router.push( "/");
+      }
+    } catch (error) {
+      console.error("Error during login", error);
+    }
+  };
+
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Sign Up" />
@@ -174,7 +206,7 @@ const SignUp: React.FC = () => {
                 Sign Up to TailAdmin
               </h2>
 
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Name
@@ -182,6 +214,9 @@ const SignUp: React.FC = () => {
                   <div className="relative">
                     <input
                       type="text"
+                      name={"brandName"}
+                      onChange={handleInputChange}
+                      value={formData.brandName}
                       placeholder="Enter your full name"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                     />
@@ -216,6 +251,9 @@ const SignUp: React.FC = () => {
                   </label>
                   <div className="relative">
                     <input
+                      name={"email"}
+                      onChange={handleInputChange}
+                      value={formData.email}
                       type="email"
                       placeholder="Enter your email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
@@ -247,6 +285,9 @@ const SignUp: React.FC = () => {
                   </label>
                   <div className="relative">
                     <input
+                      name={"password"}
+                      onChange={handleInputChange}
+                      value={formData.password}
                       type="password"
                       placeholder="Enter your password"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
@@ -282,6 +323,8 @@ const SignUp: React.FC = () => {
                   </label>
                   <div className="relative">
                     <input
+                      onChange={handleInputChange}
+                      value={formData.password}
                       type="password"
                       placeholder="Re-enter your password"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"

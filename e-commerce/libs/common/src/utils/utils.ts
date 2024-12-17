@@ -1,6 +1,5 @@
-export const dtoToQueryString = <T extends Record<string, any>>(
-  dto: T,
-): string => {
+// export const dtoToQueryString = <T extends Record<string, any>>(
+export const dtoToQueryString = (dto: any): string => {
   const params = new URLSearchParams();
 
   Object.entries(dto).forEach(([key, value]) => {

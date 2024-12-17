@@ -1,8 +1,8 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-import { ProductsDocument } from '../../../trendyol/src/models/products.schema';
+import { SharedProductsDocument } from '@app/common/shared-db/models/shared-products.schema';
 
 @Schema({ versionKey: false, collection: 'product-creation-errors' })
-export class ProductCreationErrorsDocument extends ProductsDocument {
+export class ProductCreationErrorsDocument extends SharedProductsDocument {
   @Prop()
   message: string;
 }

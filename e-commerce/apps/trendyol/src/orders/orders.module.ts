@@ -3,13 +3,10 @@ import { OrdersService } from './orders.service';
 import { OrdersController } from './orders.controller';
 import { OrdersRepository } from '../repositories/orders.repository';
 import { BrandSettingsModule, DatabaseModule } from '@app/common';
-import {
-  OrdersDocument,
-  OrdersSchema,
-} from '../../../n11/src/models/orders.schema';
+
 import { QueueModule } from '@app/common/queue/queue.module';
-import { ProductsService } from '../products/products.service';
 import { ProductsModule } from '../products/products.module';
+import { OrdersDocument, OrdersSchema } from '../models/orders.schema';
 
 @Module({
   imports: [
@@ -18,7 +15,7 @@ import { ProductsModule } from '../products/products.module';
     DatabaseModule.forFeature([
       { name: OrdersDocument.name, schema: OrdersSchema },
     ]),
-    ProductsModule
+    ProductsModule,
   ],
   controllers: [OrdersController],
   providers: [OrdersService, OrdersRepository],

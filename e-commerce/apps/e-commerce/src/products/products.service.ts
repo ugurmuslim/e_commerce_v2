@@ -12,12 +12,12 @@ import { SharedProductsRepository } from '@app/common/shared-db/repositories/sha
 import { lastValueFrom } from 'rxjs';
 import { SharedAttributesRepository } from '@app/common/shared-db/repositories/shared-attributes.repository';
 import { SharedBrandsRepository } from '@app/common/shared-db/repositories/shared-brands.repository';
-import { ProductsDocument } from '../../../trendyol/src/models/products.schema';
 import { ProductFilterDto } from '../dto/product-filter-dto';
 import { SharedCategoriesRepository } from '@app/common/shared-db/repositories/shared-categories.repository';
 import { CategoryFilterDto } from '../dto/category-filter-dto';
 import { BrandFilterDto } from '../dto/brand-filter-dto';
 import { AttributesFilterDto } from '../dto/attributes-filter-dto';
+import { SharedProductsDocument } from '@app/common/shared-db/models/shared-products.schema';
 
 @Injectable()
 export class ProductsService {
@@ -45,7 +45,7 @@ export class ProductsService {
     file?: Express.Multer.File,
   ) {
     let products: any = [];
-    const productsToEmit: ProductsDocument[] = [];
+    const productsToEmit: SharedProductsDocument[] = [];
     products = await Promise.all(
       data.data.map(async (product) => {
         try {
@@ -191,7 +191,7 @@ export class ProductsService {
     });
   }
 
-  syncProducts(provider: string, products: ProductsDocument[]) {
+  syncProducts(provider: string, products: SharedProductsDocument[]) {
     return this.getClient(provider).send('syncProducts', { products });
   }
 

@@ -35,3 +35,17 @@ export interface Attributes {
   varianter: boolean;
   slicer: boolean;
 }
+
+export interface SignupFormData {
+  email: string;
+  password: string;
+  brandName: string;
+  rePassword: string;
+}
+
+export const initialSignupFormData = {
+  email: "",
+  password: "",
+  rePassword: "",
+  brandName: "",
+};

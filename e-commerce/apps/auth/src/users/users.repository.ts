@@ -9,7 +9,10 @@ import { DEFAULT_CONNECTION } from '@app/common/constants/connections';
 export class UsersRepository extends AbstractRepository<UsersDocument> {
   protected readonly logger = new Logger(UsersRepository.name);
 
-  constructor(@InjectModel(UsersDocument.name, DEFAULT_CONNECTION) userModel: Model<UsersDocument>) {
+  constructor(
+    @InjectModel(UsersDocument.name, DEFAULT_CONNECTION)
+    userModel: Model<UsersDocument>,
+  ) {
     super(userModel);
   }
 }

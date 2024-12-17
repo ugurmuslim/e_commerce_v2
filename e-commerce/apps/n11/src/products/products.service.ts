@@ -8,7 +8,6 @@ import { ProductsRepository } from '../repositories/products.repository';
 import { HistoryRepository } from '../repositories/history.repository';
 import { GetRemoteProductsFilterDto } from '../dto/get-remote-product-filter';
 import { dtoToQueryString } from '@app/common/utils/utils';
-import { UpdateProductDto } from '../dto/update-remote-product-filter';
 import { UpdateProductStockPriceDto } from '../dto/update-stock-price-filter';
 
 @Injectable()
@@ -85,8 +84,8 @@ export class ProductsService {
 
     this.createRemote(currentEcommerceBrand, products);
   }
-
-  mapProducts(products: CreateN11ProductDto[]) {
+  // CreateN11ProductDto[]
+  mapProducts(products: any[]) {
     return products.map((product) => {
       return {
         barcode: product.barcode,
@@ -240,5 +239,4 @@ export class ProductsService {
 
     await this.updateStatusOfProducts(ecommerceBrand, response.batchRequestId);
   }
-
 }

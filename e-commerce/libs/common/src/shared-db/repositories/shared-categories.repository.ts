@@ -1,10 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { AbstractRepository } from '@app/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { FilterQuery, Model } from 'mongoose';
+import { Model } from 'mongoose';
 import { SharedCategoriesDocument } from '@app/common/shared-db/models/shared-categories.schema';
 import { SHARED_CONNECTION } from '@app/common/constants/connections';
-import { CategoriesDocument } from '../../../../../apps/n11/src/models/categories.schema';
 
 @Injectable()
 export class SharedCategoriesRepository extends AbstractRepository<SharedCategoriesDocument> {

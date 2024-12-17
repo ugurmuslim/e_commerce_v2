@@ -17,10 +17,9 @@ import {
 import { CurrentEcommerceBrand } from '@app/common/decorators/current-ecommerce-brand.decorator';
 import { BrandSettingsDocument } from '@app/common/brand-settings/models/brand-settings.schema';
 import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
-import { CreateTrendyolProductDto } from '../../../trendyol/src/dto/create-trendyol-product.dto';
 import { GetRemoteProductsFilterDto } from '../dto/get-remote-product-filter';
 import { UpdateProductStockPriceDto } from '../dto/update-stock-price-filter';
-import { UpdateProductDto } from '../dto/update-product.dto';
+import { CreateN11ProductDto } from '../dto/create-n11-product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -41,7 +40,7 @@ export class ProductsController {
   @UseGuards(JwtAuthGuard)
   async createRemote(
     @CurrentEcommerceBrand() currentBrand: BrandSettingsDocument,
-    @Payload() products: CreateTrendyolProductDto[],
+    @Payload() products: CreateN11ProductDto[],
   ): Promise<any> {
     return await this.productsService.createRemote(currentBrand, products);
   }
@@ -51,7 +50,7 @@ export class ProductsController {
   @UseGuards(BrandSettingsGuard)
   async syncWithEcommerce(
     @CurrentEcommerceBrand() currentEcommerceBrand: BrandSettingsDocument,
-    @Payload() products: CreateTrendyolProductDto[],
+    @Payload() products: CreateN11ProductDto[],
     @Ctx() context: RmqContext,
   ) {
     return await this.productsService.createProducts(
@@ -75,5 +74,4 @@ export class ProductsController {
   ) {
     return this.productsService.updateProduct(ecommerceBrand, product);
   }
-
 }

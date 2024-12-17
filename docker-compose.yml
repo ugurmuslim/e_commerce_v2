@@ -1,6 +1,20 @@
 version: '3.8'
 
 services:
+  jobs:
+    build:
+      context: e-commerce
+      dockerfile: ./apps/jobs/Dockerfile
+      target: development
+    command: pnpm run start:debug jobs
+    env_file:
+      - e-commerce/apps/jobs/.env
+    volumes:
+      - ./e-commerce:/usr/src/app
+    depends_on:
+      - rabbitmq
+
+
   api-gateway:
     build:
       context: e-commerce
@@ -37,7 +51,7 @@ services:
   trendyol:
     build:
       context: e-commerce
-      dockerfile: e-commerce/apps/trendyol/Dockerfile
+      dockerfile: ./apps/trendyol/Dockerfile
       target: development
     command: pnpm run start:debug trendyol
     env_file:
@@ -54,7 +68,7 @@ services:
   auth:
     build:
       context: e-commerce
-      dockerfile: e-commerce/apps/auth/Dockerfile
+      dockerfile: ./apps/auth/Dockerfile
       target: development
     command: pnpm run start:debug auth
     env_file:
@@ -71,7 +85,7 @@ services:
   n11:
     build:
       context: e-commerce
-      dockerfile: e-commerce/apps/n11/Dockerfile
+      dockerfile: ./apps/n11/Dockerfile
       target: development
     command: pnpm run start:debug n11
     env_file:
@@ -95,18 +109,6 @@ services:
       - ./admin-web:/usr/src
     ports:
       - "3010:3000"
-  jobs:
-    build:
-      context: e-commerce
-      dockerfile: e-commerce/apps/jobs/Dockerfile
-      target: development
-    command: pnpm run start:debug jobs
-    env_file:
-      - e-commerce/apps/jobs/.env
-    volumes:
-      - ./e-commerce:/usr/src/app
-    depends_on:
-      - rabbitmq
 
   mongo:
     image: mongo:latest

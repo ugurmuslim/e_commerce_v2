@@ -386,10 +386,10 @@ const Create = (product: { product: EcommerceProductFormData }) => {
                     ) && {
                       id: formData.attributes.find(
                         (attr) => attr.id == attribute.attribute.id,
-                      )?.value.id,
+                      )?.attributeValues.id,
                       name: formData.attributes.find(
                         (attr) => attr.id == attribute.attribute.id,
-                      )?.value.name,
+                      )?.attributeValues.name,
                     }
                   }
                 />
@@ -407,7 +407,7 @@ const Create = (product: { product: EcommerceProductFormData }) => {
                     value={
                       formData.attributes.find(
                         (attr) => attr.id == attribute.attribute.id,
-                      )?.value
+                      )?.attributeValues.name
                     }
                     placeholder={attribute.attribute.name}
                     required={attribute.required}

@@ -7,16 +7,16 @@ export class SharedProductsDocument extends AbstractDocument {
   ecommerceBrandId: string;
 
   @Prop()
-  brandId?: string;
+  brandId?: number;
 
   @Prop()
-  brandName: string;
+  brandName?: string;
 
   @Prop()
   title: string;
 
   @Prop({ unique: true })
-  barcode: string;
+  barcode?: string;
 
   @Prop()
   productMainId?: string;
@@ -25,7 +25,7 @@ export class SharedProductsDocument extends AbstractDocument {
   categoryId: number;
 
   @Prop()
-  categoryName: string;
+  categoryName?: string;
 
   @Prop()
   quantity: number;
