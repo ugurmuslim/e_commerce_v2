@@ -1,0 +1,6 @@
+{
+  "/ecommerce/products/page": "app/ecommerce/products/page.js",
+  "/ecommerce/products/create/page": "app/ecommerce/products/create/page.js",
+  "/ecommerce/products/create/[barcode]/page": "app/ecommerce/products/create/[barcode]/page.js",
+  "/ecommerce/categories/page": "app/ecommerce/categories/page.js"
+}

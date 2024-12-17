@@ -1,0 +1,32 @@
+{
+  "pages": {
+    "/ecommerce/products/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/ecommerce/products/page.js"
+    ],
+    "/layout": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/layout.css",
+      "static/chunks/app/layout.js"
+    ],
+    "/ecommerce/products/create/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/ecommerce/products/create/page.css",
+      "static/chunks/app/ecommerce/products/create/page.js"
+    ],
+    "/ecommerce/products/create/[barcode]/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/ecommerce/products/create/[barcode]/page.css",
+      "static/chunks/app/ecommerce/products/create/[barcode]/page.js"
+    ],
+    "/ecommerce/categories/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/ecommerce/categories/page.js"
+    ]
+  }
+}

@@ -1,0 +1,135 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build:
+      context: e-commerce
+      dockerfile: ./apps/api-gateway/Dockerfile
+      target: development
+    command: pnpm run start:debug api-gateway
+    env_file:
+      - e-commerce/apps/api-gateway/.env
+    ports:
+      - "3000:3000"
+      - "9233:9229"
+    volumes:
+      - ./e-commerce:/usr/src/app
+    depends_on:
+      - rabbitmq
+      - mongo
+  e-commerce:
+    build:
+        context: e-commerce
+        dockerfile: ./apps/e-commerce/Dockerfile
+        target: development
+    command: pnpm run start:debug e-commerce
+    env_file:
+      - e-commerce/apps/e-commerce/.env
+    ports:
+      - "3002:3002"
+      - "9229:9229"
+    volumes:
+      - ./e-commerce:/usr/src/app
+    depends_on:
+      - rabbitmq
+      - mongo
+
+  trendyol:
+    build:
+      context: e-commerce
+      dockerfile: e-commerce/apps/trendyol/Dockerfile
+      target: development
+    command: pnpm run start:debug trendyol
+    env_file:
+      - e-commerce/apps/trendyol/.env
+    ports:
+      - "3003:3003"
+      - "9230:9229"
+    volumes:
+      - ./e-commerce:/usr/src/app
+    depends_on:
+      - rabbitmq
+      - mongo
+
+  auth:
+    build:
+      context: e-commerce
+      dockerfile: e-commerce/apps/auth/Dockerfile
+      target: development
+    command: pnpm run start:debug auth
+    env_file:
+      - e-commerce/apps/auth/.env
+    ports:
+      - "3001:3001"
+      - "9231:9229"
+    volumes:
+      - ./e-commerce:/usr/src/app
+    depends_on:
+      - rabbitmq
+      - mongo
+
+  n11:
+    build:
+      context: e-commerce
+      dockerfile: e-commerce/apps/n11/Dockerfile
+      target: development
+    command: pnpm run start:debug n11
+    env_file:
+      - e-commerce/apps/n11/.env
+    ports:
+      - "3005:3005"
+      - "9232:9229"
+    volumes:
+      - ./e-commerce:/usr/src/app
+    depends_on:
+      - rabbitmq
+      - mongo
+
+  admin-web:
+    build:
+      context: admin-web
+      dockerfile: Dockerfile
+      target: development
+    command: pnpm run dev
+    volumes:
+      - ./admin-web:/usr/src
+    ports:
+      - "3010:3000"
+  jobs:
+    build:
+      context: e-commerce
+      dockerfile: e-commerce/apps/jobs/Dockerfile
+      target: development
+    command: pnpm run start:debug jobs
+    env_file:
+      - e-commerce/apps/jobs/.env
+    volumes:
+      - ./e-commerce:/usr/src/app
+    depends_on:
+      - rabbitmq
+
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"  # Expose MongoDB port
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root # Set root username
+      MONGO_INITDB_ROOT_PASSWORD: example  # Set root password
+    volumes:
+      - mongo_data_ecommerce:/data/db  # Persist data
+  rabbitmq:
+    container_name: rabbitmq
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - 'rabbitmq_data_ecommerce:/data'
+volumes:
+  mongo_data_ecommerce:
+  rabbitmq_data_ecommerce:
+
+networks:
+    backend:
+        driver: bridge
