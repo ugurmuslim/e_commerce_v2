@@ -1187,6 +1187,15 @@ body{
 .grid-cols-7{
   grid-template-columns: repeat(7, minmax(0, 1fr));
 }
+.grid-cols-8{
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+}
+.grid-cols-9{
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+}
+.grid-cols-10{
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+}
 .flex-row-reverse{
   flex-direction: row-reverse;
 }
@@ -1419,6 +1428,10 @@ body{
   --tw-border-opacity: 1;
   border-color: rgb(255 255 255 / var(--tw-border-opacity));
 }
+.border-gray-300{
+  --tw-border-opacity: 1;
+  border-color: rgb(209 213 219 / var(--tw-border-opacity));
+}
 .border-t-transparent{
   border-top-color: transparent;
 }
@@ -1523,6 +1536,14 @@ body{
 .bg-whiter{
   --tw-bg-opacity: 1;
   background-color: rgb(245 247 253 / var(--tw-bg-opacity));
+}
+.bg-gray-100{
+  --tw-bg-opacity: 1;
+  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
+}
+.bg-blue-500{
+  --tw-bg-opacity: 1;
+  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
 }
 .bg-opacity-10{
   --tw-bg-opacity: 0.1;
@@ -1918,6 +1939,14 @@ body{
 .text-white{
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+.text-blue-500{
+  --tw-text-opacity: 1;
+  color: rgb(59 130 246 / var(--tw-text-opacity));
+}
+.text-gray-700{
+  --tw-text-opacity: 1;
+  color: rgb(55 65 81 / var(--tw-text-opacity));
 }
 .\!opacity-100{
   opacity: 1 !important;
@@ -2582,6 +2611,11 @@ input[type="search"]::-webkit-search-cancel-button{
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
 }
 
+.hover\:bg-blue-600:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(37 99 235 / var(--tw-bg-opacity));
+}
+
 .hover\:bg-opacity-50:hover{
   --tw-bg-opacity: 0.5;
 }
@@ -2652,6 +2686,11 @@ input[type="search"]::-webkit-search-cancel-button{
 .focus\:outline-none:focus{
   outline: 2px solid transparent;
   outline-offset: 2px;
+}
+
+.focus\:ring-primary:focus{
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(60 80 224 / var(--tw-ring-opacity));
 }
 
 .file\:focus\:border-primary:focus::file-selector-button{
@@ -2954,6 +2993,10 @@ input[type="search"]::-webkit-search-cancel-button{
     grid-template-columns: repeat(8, minmax(0, 1fr));
   }
 
+  .sm\:grid-cols-9{
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+  }
+
   .sm\:flex-row{
     flex-direction: row;
   }
@@ -3088,6 +3131,11 @@ input[type="search"]::-webkit-search-cancel-button{
   .md\:px-6{
     padding-left: 1.5rem;
     padding-right: 1.5rem;
+  }
+
+  .md\:px-7{
+    padding-left: 1.75rem;
+    padding-right: 1.75rem;
   }
 
   .md\:opacity-100{

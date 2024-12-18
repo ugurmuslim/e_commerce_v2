@@ -16,28 +16,18 @@ export class SharedProductsRepository extends AbstractRepository<SharedProductsD
     super(productModel);
   }
 
-  async createProduct(document: Omit<SharedProductsDocument, '_id'>): Promise<{
-    message?: string;
-    success: boolean;
-  }> {
+  async createProduct(
+    document: Omit<SharedProductsDocument, '_id'>,
+  ): Promise<{ success: boolean }> {
     try {
-      await this.create(document);
-      return {
-        success: true,
-      };
-    } catch (error) {
+      await this.create(document); // Assuming this is a method that interacts with DB or another service
+    } catch (error: unknown) {
       if (error instanceof Error) {
-        this.logger.error(error.message); // Log only the message
-        return {
-          success: false,
-          message: error.message,
-        };
+        this.logger.error('Error creating product:', error.stack);
+        throw new Error(error.message);
       } else {
-        this.logger.error('An unknown error occurred');
-        return {
-          success: false,
-          message: 'An unknown error occurred',
-        };
+        this.logger.error('Error creating product:', error.stack);
+        throw new Error('An unknown error occurred.');
       }
     }
   }

@@ -135,9 +135,10 @@ export class ProductsService {
       } catch (error) {
         await this.productsCreationErrorsRepository.create({
           ...product,
-          message: error.message
-            ? 'Error: ' + error.message
-            : 'An unknown error occurred',
+          message:
+            error instanceof Error
+              ? error.message
+              : 'An unknown error occurred',
         });
       }
     }

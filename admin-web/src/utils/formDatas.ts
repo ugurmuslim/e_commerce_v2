@@ -7,15 +7,16 @@ export interface EcommerceProductFormData {
   description: string;
   barcode: string | null;
   categoryId: number | null;
+  categoryName?: string;
   brandId: number | null;
   quantity: number;
   listPrice: number;
   salePrice: number;
-  images: string[]; // Assuming images are URLs or file names
   attributes: Attributes[]; // You can modify this type based on the structure of attributes
   vatRate?: number;
   dimensionalWeight?: number;
   currencyType?: CurrencyType;
+  images: { url: string }[];
 }
 
 export const initialProductFormData = {

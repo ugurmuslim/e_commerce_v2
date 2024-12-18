@@ -7,10 +7,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { catchError, map, Observable, of, tap } from 'rxjs';
-import { AUTH_SERVICE } from '@app/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
 import { UserDto } from '@app/common/dto/user.dto';
 import { Reflector } from '@nestjs/core';
+import { AUTH_SERVICE } from '@app/common';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {

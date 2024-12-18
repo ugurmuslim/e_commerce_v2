@@ -6,8 +6,8 @@ const getCookie = (cookieName: string) => {
   return cookie ? cookie.split("=")[1] : null;
 };
 
-export const mapFilters = (query: any) => {
-  const queryParams = query.reduce((acc, item) => {
+export const mapFilters = (query: Record<string, string | number>[]) => {
+  const queryParams = query.reduce((acc: [string, string][], item) => {
     for (const key in item) {
       const value = item[key];
       if (Array.isArray(value)) {

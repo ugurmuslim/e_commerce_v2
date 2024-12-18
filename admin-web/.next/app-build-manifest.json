@@ -34,6 +34,17 @@
       "static/css/app/ecommerce/products/create/[barcode]/page.css",
       "static/chunks/app/ecommerce/products/create/[barcode]/page.js"
     ],
+    "/profile/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/profile/page.js"
+    ],
+    "/auth/signup/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/auth/signup/page.css",
+      "static/chunks/app/auth/signup/page.js"
+    ],
     "/_not-found/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",

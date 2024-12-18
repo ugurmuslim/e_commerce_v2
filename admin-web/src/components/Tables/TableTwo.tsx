@@ -4,33 +4,31 @@ import { useRouter } from "next/navigation";
 import { fetchProducts, mapFilters } from "@/utils/backend-communication";
 import SelectGroupTwo from "@/components/SelectGroup/SelectGroupTwo";
 import { toast } from "react-toastify";
+import { EcommerceProductFormData } from "@/utils/formDatas";
 
 interface TableProps {
-  products: products;
+  products: Products;
 }
 
-type products = {
+type Products = {
   totalCount: number;
   totalPages: number;
   currentPage: number;
-  data: {
-    id: number;
-    name: string;
-    price: number;
-    stock: number;
-    status: string;
-  };
+  data: EcommerceProductFormData[];
 };
 
-const TableTwo = ({ products }) => {
-  const [searchQuery, setSearchQuery] = useState([]);
+const TableTwo: React.FC<TableProps> = ({ products }) => {
+  const [searchQuery, setSearchQuery] = useState<
+    Record<string, string | number>[]
+  >([]);
   const [keystrokeCount, setKeystrokeCount] = useState(0);
-  const [updatedProducts, setProducts] = useState(products);
-  const [currentPage, setCurrentPage] = useState(products.currentPage);
+  const [updatedProducts, setProducts] = useState<Products>(products);
+  const [currentPage, setCurrentPage] = useState<number>(products.currentPage);
   const router = useRouter();
-  const debounceTimeout = useRef<null | number>(null);
-  console.log(products);
-  const getProducts = async (query) => {
+  const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
+  const debounceTimeout = useRef<null | ReturnType<typeof setTimeout>>(null);
+
+  const getProducts = async (query: Record<string, string | number>[]) => {
     try {
       const queryString = mapFilters(query);
       const response = await fetchProducts(queryString);
@@ -55,7 +53,7 @@ const TableTwo = ({ products }) => {
     }
   }, [keystrokeCount, searchQuery]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchQuery((_prevQuery) => [{ title: value }]);
     setKeystrokeCount((prev) => prev + 1);
@@ -69,8 +67,7 @@ const TableTwo = ({ products }) => {
     }, 500); // Delay for 500ms (you can adjust this)
   };
 
-  const handlePageChange = (page) => {
-    console.log(searchQuery.find((s) => s.title));
+  const handlePageChange = (page: number) => {
     setCurrentPage(page);
     setSearchQuery((prevQuery) => [
       ...prevQuery.filter((item) => item.title), // Keep the title value
@@ -78,6 +75,38 @@ const TableTwo = ({ products }) => {
     ]);
   };
 
+  const handleCheckboxChange = (id: number) => {
+    if (selectedProducts.includes(id)) {
+      setSelectedProducts(
+        selectedProducts.filter((productId) => productId !== id),
+      );
+    } else {
+      setSelectedProducts([...selectedProducts, id]);
+    }
+  };
+
+  const isAllSelected =
+    updatedProducts?.data?.length > 0 &&
+    selectedProducts.length === updatedProducts?.data?.length;
+
+  const isProductSelected = (productId: number) =>
+    selectedProducts.includes(productId);
+
+  const handleBulkAction = () => {
+    // Perform bulk action with selected products
+    console.log("Selected Products:", selectedProducts);
+    toast.success("Bulk action performed!");
+  };
+
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      // Select all products
+      setSelectedProducts(updatedProducts?.data.map((product) => product.id));
+    } else {
+      // Deselect all products
+      setSelectedProducts([]);
+    }
+  };
   return (
     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="flex items-center justify-between px-4 py-6 md:px-6 xl:px-7.5">
@@ -85,6 +114,28 @@ const TableTwo = ({ products }) => {
           Top Products
         </h4>
         <div className="flex items-center space-x-4">
+          <input
+            type="checkbox"
+            className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+            onChange={handleSelectAll}
+            checked={isAllSelected}
+          />
+          <span className="text-md font-medium">Hepsini seç</span>
+        </div>
+        <div className="flex items-center space-x-4">
+          <div className="px-4 py-4">
+            <button
+              className="inline-flex items-center justify-center bg-primary px-4 py-2 text-center text-xs font-medium text-white hover:bg-opacity-90 sm:px-6 sm:py-2"
+              onClick={handleBulkAction}
+              disabled={selectedProducts.length === 0}
+            >
+              {isAllSelected
+                ? "Bütün ürünleri platformlara gönder"
+                : selectedProducts.length > 0
+                  ? "Seçilen ürünleri platformlara gönder"
+                  : "Platformlara gönder"}
+            </button>
+          </div>
           {/* Category Dropdown */}
           <SelectGroupTwo type="categories"></SelectGroupTwo>
 
@@ -93,13 +144,16 @@ const TableTwo = ({ products }) => {
             type="text"
             placeholder="Search products..."
             className="rounded-md border px-4 py-2"
-            value={searchQuery.title}
             onChange={handleInputChange}
           />
         </div>
       </div>
-      <div className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5">
-        <div className="col-span-3 flex items-center">
+
+      <div className="grid grid-cols-9 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-9 md:px-6 2xl:px-7.5">
+        <div className="col-span-1 flex items-center">
+          <p className="font-medium">Seçim</p>
+        </div>
+        <div className="col-span-2 flex items-center">
           <p className="font-medium">Ürün İsmi</p>
         </div>
         <div className="col-span-2 hidden items-center sm:flex">
@@ -118,10 +172,18 @@ const TableTwo = ({ products }) => {
 
       {updatedProducts?.data?.map((product, key) => (
         <div
-          className="grid grid-cols-6 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-8 md:px-6 2xl:px-7.5"
+          className="grid grid-cols-9 border-t border-stroke px-4 py-4.5 dark:border-strokedark sm:grid-cols-9 md:px-6 2xl:px-7.5"
           key={key}
         >
-          <div className="col-span-3 flex items-center">
+          <div className="col-span-1 flex items-center">
+            <input
+              type="checkbox"
+              checked={isProductSelected(product.id)}
+              onChange={() => handleCheckboxChange(product.id)}
+              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+            />
+          </div>
+          <div className="col-span-2 flex items-center">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
               <div className="h-12.5 w-15 rounded-md">
                 <img

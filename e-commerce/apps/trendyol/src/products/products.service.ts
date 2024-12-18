@@ -203,7 +203,6 @@ export class ProductsService {
       body: { items: products },
     });
 
-
     await this.historyRepository.create({
       ecommerceBrandId: ecommerceBrand.ecommerceBrandId,
       batchId: response.batchRequestId,
