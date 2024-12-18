@@ -27,8 +27,11 @@ export const validateForm = async <T>(
   }
 };
 
+export type FormErrors = Record<string, string>;
+
 export const ProductCreateValidationSchema =
   Yup.object<EcommerceProductFormData>({
+    _id: Yup.string().optional(),
     title: Yup.string().required("Bu alan zorunludur"),
     description: Yup.string().required("Bu alan zorunludur"),
     categoryId: Yup.number().required("Bu alan zorunludur"),
@@ -42,3 +45,16 @@ export const ProductCreateValidationSchema =
       .required("Geçerli bir değer girilmeli")
       .oneOf(Object.values(CurrencyType)),
   });
+
+export const SignupValidationSchema = Yup.object({
+  name: Yup.string().required("Bu alan zorunludur"),
+  email: Yup.string()
+    .email("Geçerli bir email girin")
+    .required("Bu alan zorunludur"),
+  password: Yup.string()
+    .required("Bu alan zorunludur")
+    .min(8, "Şifre en az 8 karakter olmalıdır"),
+  rePassword: Yup.string()
+    .required("Bu alan zorunludur")
+    .oneOf([Yup.ref("password")], "Şifreler eşleşmiyor"),
+});

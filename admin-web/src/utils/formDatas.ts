@@ -1,3 +1,7 @@
+export enum CurrencyType {
+  TRY = "TRY",
+}
+
 export interface EcommerceProductFormData {
   title: string;
   description: string;
@@ -14,9 +18,21 @@ export interface EcommerceProductFormData {
   currencyType?: CurrencyType;
 }
 
-export enum CurrencyType {
-  TRY = "TRY",
-}
+export const initialProductFormData = {
+  title: "",
+  barcode: null,
+  description: "",
+  categoryId: null,
+  brandId: null,
+  quantity: 2,
+  listPrice: 20,
+  salePrice: 30,
+  images: [],
+  attributes: [],
+  vatRate: 20,
+  dimensionalWeight: 0,
+  currencyType: CurrencyType.TRY,
+};
 
 export interface Attributes {
   id: number;

@@ -7,19 +7,25 @@ import { TokenPayload } from '../interfaces/token-payload.interface';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(configService: ConfigService,
-              private readonly usersService: UsersService) {
+  constructor(
+    configService: ConfigService,
+    private readonly usersService: UsersService,
+  ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (request: any) => {
-          return request?.cookies?.Authentication || request?.Authentication ||
-          request?.headers.Authentication
-        } ]),
-      secretOrKey: configService.get('JWT_SECRET')
+          return (
+            request?.cookies?.Authentication ||
+            request?.Authentication ||
+            request?.headers.Authentication
+          );
+        },
+      ]),
+      secretOrKey: configService.get('JWT_SECRET'),
     });
   }
 
   async validate({ userId }: TokenPayload) {
-        return this.usersService.getUser({ _id: userId });
+    return this.usersService.getUser({ _id: userId });
   }
 }

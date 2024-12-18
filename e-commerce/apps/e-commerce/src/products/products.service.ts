@@ -122,14 +122,23 @@ export class ProductsService {
     }
 
     for (const product of products) {
-      const creation = await this.productsRepository.createProduct(product);
-      if (!creation.success) {
+      try {
+        if (product._id) {
+          await this.productsRepository.findOneAndUpdate(
+            { _id: product._id },
+            product,
+          );
+        } else {
+          await this.productsRepository.createProduct(product);
+        }
+        productsToEmit.push(product);
+      } catch (error) {
         await this.productsCreationErrorsRepository.create({
           ...product,
-          message: 'You must provide all required fields',
+          message: error.message
+            ? 'Error: ' + error.message
+            : 'An unknown error occurred',
         });
-      } else {
-        productsToEmit.push(product);
       }
     }
 

@@ -10,7 +10,8 @@ export class SharedProductsRepository extends AbstractRepository<SharedProductsD
   protected readonly logger = new Logger(SharedProductsRepository.name);
 
   constructor(
-    @InjectModel(SharedProductsDocument.name,SHARED_CONNECTION) productModel: Model<SharedProductsDocument>,
+    @InjectModel(SharedProductsDocument.name, SHARED_CONNECTION)
+    productModel: Model<SharedProductsDocument>,
   ) {
     super(productModel);
   }
@@ -19,7 +20,6 @@ export class SharedProductsRepository extends AbstractRepository<SharedProductsD
     message?: string;
     success: boolean;
   }> {
-
     try {
       await this.create(document);
       return {

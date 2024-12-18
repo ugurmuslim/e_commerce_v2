@@ -36,6 +36,10 @@ export class AttributesDto {
 
 export class CreateProductDto {
   @IsString()
+  @IsOptional()
+  _id: string;
+
+  @IsString()
   @IsNotEmpty()
   title: string;
 

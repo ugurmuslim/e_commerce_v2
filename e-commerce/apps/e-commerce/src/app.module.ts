@@ -10,6 +10,7 @@ import * as Joi from 'joi';
 import { OrdersModule } from './orders/orders.module';
 import { ProductsModule } from './products/products.module';
 import { CategoriesModule } from './categories/categories.module';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { CategoriesModule } from './categories/categories.module';
       }),
     }),
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}

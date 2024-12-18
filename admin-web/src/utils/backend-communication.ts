@@ -57,7 +57,6 @@ export const fetchCategories = async (
   if (authentication === null) {
     authentication = getCookie("Authentication");
   }
-  console.log(11111111111111);
   const response = await fetch(
     `http://localhost:3000/api/v1/e-commerce/categories?${queryString}`,
     {
@@ -134,5 +133,22 @@ export const fetchAttributes = async (
       credentials: "include",
     },
   );
+  return response;
+};
+
+export const fetchUser = async (authentication?: string | null) => {
+  if (!authentication) {
+    authentication = getCookie("Authentication");
+  }
+
+  console.log("authentication", authentication);
+  const response = await fetch(`http://localhost:3000/api/v1/e-commerce/user`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `Authentication=${authentication}`,
+    },
+    credentials: "include",
+  });
   return response;
 };

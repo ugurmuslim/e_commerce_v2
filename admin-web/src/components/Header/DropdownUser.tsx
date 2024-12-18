@@ -3,8 +3,11 @@ import Link from "next/link";
 import Image from "next/image";
 import ClickOutside from "@/components/ClickOutside";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/providers/UserProvider";
 
 const DropdownUser = () => {
+  const { user } = useUser();
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
   return (
@@ -16,16 +19,16 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            Thomas Anree
+            {user ? user.name : "Misafir"}
           </span>
-          <span className="block text-xs">UX Designer</span>
+          <span className="block text-xs">Ecommerce</span>
         </span>
 
         <span className="h-12 w-12 rounded-full">
           <Image
             width={112}
             height={112}
-            src={"/images/user/user-01.png"}
+            src={"/images/user/logged-in-user-avatar.png"}
             style={{
               width: "auto",
               height: "auto",

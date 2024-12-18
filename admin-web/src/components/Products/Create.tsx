@@ -4,8 +4,8 @@ import SelectGroupTwo from "@/components/SelectGroup/SelectGroupTwo";
 import React, { useEffect, useState } from "react";
 import {
   Attributes,
-  CurrencyType,
   EcommerceProductFormData,
+  initialProductFormData,
 } from "@/utils/formDatas";
 import {
   fetchAttributes,
@@ -16,46 +16,17 @@ import FileUpload from "@/components/FileUpload";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
+  FormErrors,
   ProductCreateValidationSchema,
   validateForm,
 } from "@/utils/FormValidations";
 import "@/css/custom.css";
 
-const initialFormData = {
-  title: "",
-  barcode: null,
-  description: "",
-  categoryId: null,
-  brandId: null,
-  quantity: 2,
-  listPrice: 20,
-  salePrice: 30,
-  images: [],
-  attributes: [],
-  vatRate: 20,
-  dimensionalWeight: 0,
-  currencyType: CurrencyType.TRY,
-};
-
-interface Errors {
-  title: string;
-  description: string;
-  barcode: string;
-  categoryId: string;
-  brandId: string;
-  quantity: string;
-  listPrice: string;
-  salePrice: string;
-  vatRate: string;
-  dimensionalWeight: string;
-  currencyType: string;
-}
-
 const Create = (product: { product: EcommerceProductFormData }) => {
   const [formData, setFormData] = useState<EcommerceProductFormData>(
-    product.product ?? initialFormData,
+    product.product ?? initialProductFormData,
   );
-  const [errors, setErrors] = useState<Errors>({});
+  const [errors, setErrors] = useState<FormErrors>({});
   const [attributes, setAttributes] = useState<Attributes[]>([]);
 
   useEffect(() => {
@@ -86,6 +57,10 @@ const Create = (product: { product: EcommerceProductFormData }) => {
       const attributeIndex = formData.attributes.findIndex(
         (attr) => attr.name === attributeName,
       );
+
+      if (typeof value === "string") {
+        value = { id: 0, name: value };
+      }
 
       if (attributeIndex !== -1) {
         const updatedAttributes = [...formData.attributes];
@@ -128,7 +103,7 @@ const Create = (product: { product: EcommerceProductFormData }) => {
       const response = await postProducts({ data: [formData] });
       const data = await response.json();
       if (data.success) {
-        setFormData(initialFormData);
+        setFormData(initialProductFormData);
         toast.success("Product created successfully!");
       } else {
         toast.error(
@@ -160,7 +135,7 @@ const Create = (product: { product: EcommerceProductFormData }) => {
                     placeholder="Ürün ismi"
                     className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                   />
-                  {errors.title && (
+                  {errors?.title && (
                     <div className="error-message">{errors.title}</div>
                   )}
                 </div>
