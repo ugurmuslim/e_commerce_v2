@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { initialSignupFormData, SignupFormData } from "@/utils/formDatas";
+import { initialSignupFormData, SignupFormData } from "@/utils/dataTypes";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import Link from "next/link";

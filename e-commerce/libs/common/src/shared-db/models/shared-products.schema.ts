@@ -51,22 +51,36 @@ export class SharedProductsDocument extends AbstractDocument {
   @Prop()
   images: Images[];
 
-  @Prop()
-  attributes: Attributes[];
+  @Prop({
+    type: [
+      {
+        attributeId: Number,
+        attributeName: String,
+        attributeValue: String,
+        attributeValueId: Number,
+      },
+    ],
+  })
+  attributes: {
+    attributeId?: number;
+    attributeName?: string;
+    attributeValue?: string;
+    attributeValueId?: number;
+  }[];
 }
 
 interface Images {
   url: string;
 }
 
-interface Attributes {
-  name: string;
-  id: number;
-  attributeValues: {
-    id: number;
-    name: string;
-  };
-}
+// interface Attributes {
+//   name: string;
+//   id: number;
+//   attributeValues: {
+//     id: number;
+//     name: string;
+//   };
+// }
 
 export const SharedProductSchema = SchemaFactory.createForClass(
   SharedProductsDocument,

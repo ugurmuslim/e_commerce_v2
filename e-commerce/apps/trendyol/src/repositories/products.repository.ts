@@ -7,9 +7,12 @@ import { DEFAULT_CONNECTION } from '@app/common/constants/connections';
 
 @Injectable()
 export class ProductsRepository extends AbstractRepository<ProductsDocument> {
-    protected readonly logger = new Logger(ProductsRepository.name);
+  protected readonly logger = new Logger(ProductsRepository.name);
 
-    constructor(@InjectModel(ProductsDocument.name,DEFAULT_CONNECTION) productModel: Model<ProductsDocument>) {
-        super(productModel);
-    }
+  constructor(
+    @InjectModel(ProductsDocument.name, DEFAULT_CONNECTION)
+    productModel: Model<ProductsDocument>,
+  ) {
+    super(productModel);
+  }
 }

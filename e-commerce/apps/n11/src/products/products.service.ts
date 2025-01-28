@@ -2,21 +2,24 @@ import { Inject, Injectable } from '@nestjs/common';
 import { BrandSettingsDocument } from '@app/common/brand-settings/models/brand-settings.schema';
 import { fetchN11 } from '../utils/fetch';
 import { CreateN11ProductDto } from '../dto/create-n11-product.dto';
-import { ECOMMERCE_SERVICE } from '@app/common';
+import { ECOMMERCE_SERVICE, SYNC_PRODUCTS_WITH_TRENDYOL } from '@app/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ProductsRepository } from '../repositories/products.repository';
 import { HistoryRepository } from '../repositories/history.repository';
 import { GetRemoteProductsFilterDto } from '../dto/get-remote-product-filter';
 import { dtoToQueryString } from '@app/common/utils/utils';
 import { UpdateProductStockPriceDto } from '../dto/update-stock-price-filter';
+import { AbstractProductsService } from '@app/common/shared-db/services/abstract-products.service';
 
 @Injectable()
-export class ProductsService {
+export class ProductsService extends AbstractProductsService<ProductsRepository> {
   constructor(
     @Inject(ECOMMERCE_SERVICE) private readonly ecommerceClient: ClientProxy,
-    private readonly productsRepository: ProductsRepository,
+    protected readonly productsRepository: ProductsRepository,
     private readonly historyRepository: HistoryRepository,
-  ) {}
+  ) {
+    super();
+  }
 
   async getRemote(
     ecommerceBrand: BrandSettingsDocument,
@@ -84,6 +87,7 @@ export class ProductsService {
 
     this.createRemote(currentEcommerceBrand, products);
   }
+
   // CreateN11ProductDto[]
   mapProducts(products: any[]) {
     return products.map((product) => {
@@ -166,10 +170,6 @@ export class ProductsService {
     }
   }
 
-  async getProducts() {
-    return await this.productsRepository.find({});
-  }
-
   async createRemote(
     currentEcommerceBrand: BrandSettingsDocument,
     products: CreateN11ProductDto[],
@@ -238,5 +238,49 @@ export class ProductsService {
     });
 
     await this.updateStatusOfProducts(ecommerceBrand, response.batchRequestId);
+  }
+
+  async sendToPlatforms(
+    currentEcommerceBrand: BrandSettingsDocument,
+    barcodes: string[],
+  ) {
+    const products = await this.productsRepository.filter({
+      barcode: { $in: barcodes },
+      limit: 1000,
+    });
+
+    if (products.data.length > 0) {
+      const productsData = products.data.map(
+        ({
+          barcode,
+          attributes,
+          brandId,
+          brand,
+          title,
+          description,
+          listPrice,
+          salePrice,
+          quantity,
+          images,
+          categoryName,
+          productMainId,
+        }) => ({
+          barcode,
+          attributes,
+          brandId,
+          brand,
+          title,
+          description,
+          listPrice,
+          salePrice,
+          currencyType: 'TRY', // Added fixed value
+          quantity,
+          images,
+          categoryName,
+          productMainId,
+        }),
+      );
+      this.ecommerceClient.emit(SYNC_PRODUCTS_WITH_TRENDYOL, productsData);
+    }
   }
 }

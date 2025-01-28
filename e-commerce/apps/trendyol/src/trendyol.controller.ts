@@ -1,7 +1,4 @@
-import {
-  Controller,
-  UsePipes,
-} from '@nestjs/common';
+import { Controller, UsePipes } from '@nestjs/common';
 import { TrendyolService } from './trendyol.service';
 import {
   Ctx,

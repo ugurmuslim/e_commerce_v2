@@ -1,79 +1,138 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 import { AbstractDocument } from '@app/common';
-import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 
 @Schema({ versionKey: false, collection: 'products' })
 export class ProductsDocument extends AbstractDocument {
   @Prop()
+  approved?: boolean;
+
+  @Prop()
+  archived?: boolean;
+
+  @Prop()
   ecommerceBrandId: string;
 
-  @Prop({ isRequired: false })
-  id?: string;
+  @Prop({
+    type: [
+      {
+        attributeId: Number,
+        attributeName: String,
+        attributeValue: String,
+        attributeValueId: Number,
+      },
+    ],
+  })
+  attributes: {
+    attributeId?: number;
+    attributeName?: string;
+    attributeValue?: string;
+    attributeValueId?: number;
+  }[];
 
   @Prop()
-  brandId?: number;
+  barcode: string;
 
   @Prop()
-  title: string;
-
-  @Prop({ unique: true })
-  barcode?: string;
+  batchRequestId?: string;
 
   @Prop()
-  productMainId?: string;
+  brand?: string;
 
   @Prop()
-  categoryId: number;
+  brandId: number;
 
   @Prop()
-  quantity: number;
+  categoryName?: string;
 
   @Prop()
-  stockCode?: string;
-
-  @Prop()
-  dimensionalWeight: number;
+  createDateTime?: number;
 
   @Prop()
   description: string;
 
   @Prop()
-  currencyType: string;
+  dimensionalWeight: number;
+
+  @Prop()
+  gender?: string;
+
+  @Prop()
+  hasActiveCampaign?: boolean;
+
+  @Prop()
+  id?: string;
+
+  @Prop({ type: [{ url: String }] })
+  images: { url: string }[];
+
+  @Prop()
+  lastPriceChangeDate?: string;
+
+  @Prop()
+  lastStockChangeDate?: string;
+
+  @Prop()
+  lastUpdateDate?: number;
 
   @Prop()
   listPrice: number;
 
   @Prop()
+  locked?: boolean;
+
+  @Prop()
+  onSale?: boolean;
+
+  @Prop()
+  pimCategoryId?: number;
+
+  @Prop()
+  platformListingId?: string;
+
+  @Prop()
+  productMainId?: string;
+
+  @Prop()
+  quantity: number;
+
+  @Prop()
   salePrice: number;
+
+  @Prop()
+  stockCode?: string;
+
+  @Prop()
+  stockUnitType?: string;
+
+  @Prop()
+  supplierId?: number;
+
+  @Prop()
+  title: string;
 
   @Prop()
   vatRate: number;
 
   @Prop()
-  cargoCompanyId?: number;
+  version?: number;
 
   @Prop()
-  images: Images[];
+  rejected?: boolean;
+
+  @Prop({ type: [String], default: [] })
+  rejectReasonDetails?: string[];
 
   @Prop()
-  attributes: Attributes[];
+  blacklisted?: boolean;
+
+  @Prop()
+  productUrl?: string;
 
   @Prop({ type: Object })
   status?: {
     synced: boolean;
     message?: string;
-  };
-}
-
-interface Images {
-  url: string;
-}
-
-interface Attributes {
-  id: number;
-  name: string;
-  attributeValues: {
-    id: number;
-    name: string;
   };
 }
 

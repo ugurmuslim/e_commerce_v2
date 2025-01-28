@@ -98,7 +98,7 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     skip: number = 0,
   ): Promise<any> {
     const data = await this.model
-      .find(filterQuery, { _id: 0, ecommerceBrandId: 0 })
+      .find(filterQuery, { _id: 0 })
       .skip(skip)
       .limit(limit)
       .lean<TDocument[]>(true);
@@ -114,7 +114,7 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
     const filter: any = {};
     delete filterQuery.page;
     const skip = (page - 1) * limit;
-    const projection: any = { _id: 0, ecommerceBrandId: 0, subCategories: 0 };
+    const projection: any = { ecommerceBrandId: 0, subCategories: 0 };
     if (filterQuery.title) {
       filter.title = { $regex: new RegExp(filterQuery.title, 'i') }; // Case-insensitive regex
     }
@@ -143,9 +143,7 @@ export abstract class AbstractRepository<TDocument extends AbstractDocument> {
       .limit(limit)
       .lean<TDocument[]>(true);
 
-    const totalCount = await this.model.countDocuments({
-      title: { $regex: new RegExp(filterQuery.title, 'i') },
-    });
+    const totalCount = await this.model.countDocuments(filter);
     const totalPages = Math.ceil(totalCount / limit);
 
     return {

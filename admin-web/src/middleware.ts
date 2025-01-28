@@ -9,7 +9,7 @@ export function middleware(req: NextRequest) {
   if (!token) {
     // Add the redirect path and warning message as query parameters
     loginUrl.searchParams.set("redirect", currentPath);
-    loginUrl.searchParams.set("warning", "Please sign in to access this page.");
+    loginUrl.searchParams.set("warning", "Please sign in to access this page");
 
     return NextResponse.redirect(loginUrl);
   }
@@ -18,5 +18,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/ecommerce/:path*"], // Protected paths
+  matcher: ["/e-commerce/:path*", "/trendyol/:path*", "/n11/:path*"], // Protected paths
 };

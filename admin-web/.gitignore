@@ -1,6 +1,6 @@
 # Node Modules
 node_modules/
-
+.next
 # Logs
 npm-debug.log*
 yarn-debug.log*

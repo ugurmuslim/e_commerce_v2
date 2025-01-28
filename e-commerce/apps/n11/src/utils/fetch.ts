@@ -24,7 +24,7 @@ export const fetchN11 = async ({
 
   try {
     const response = await fetch(
-      `${process.env.TEST_API_ENDPOINT}${url}`,
+      `${process.env.PRODUCTION_API_ENDPOINT}${url}`,
       options,
     );
     return await response.json();

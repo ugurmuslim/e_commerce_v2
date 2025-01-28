@@ -2,7 +2,6 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   CreateProductRequestDto,
   N11_SERVICE,
-  SYNC_PRODUCTS_WITH_ECOMMERCE,
   TRENDYOL_SERVICE,
 } from '@app/common';
 import { ClientProxy } from '@nestjs/microservices';
@@ -12,31 +11,25 @@ import { SharedProductsRepository } from '@app/common/shared-db/repositories/sha
 import { lastValueFrom } from 'rxjs';
 import { SharedAttributesRepository } from '@app/common/shared-db/repositories/shared-attributes.repository';
 import { SharedBrandsRepository } from '@app/common/shared-db/repositories/shared-brands.repository';
-import { ProductFilterDto } from '../dto/product-filter-dto';
 import { SharedCategoriesRepository } from '@app/common/shared-db/repositories/shared-categories.repository';
 import { CategoryFilterDto } from '../dto/category-filter-dto';
 import { BrandFilterDto } from '../dto/brand-filter-dto';
 import { AttributesFilterDto } from '../dto/attributes-filter-dto';
 import { SharedProductsDocument } from '@app/common/shared-db/models/shared-products.schema';
+import { AbstractProductsService } from '@app/common/shared-db/services/abstract-products.service';
 
 @Injectable()
-export class ProductsService {
+export class ProductsService extends AbstractProductsService<SharedProductsRepository> {
   constructor(
     private readonly productsCreationErrorsRepository: ProductsCreationErrorsRepository,
-    private readonly productsRepository: SharedProductsRepository,
+    protected readonly productsRepository: SharedProductsRepository,
     private readonly attributesRepository: SharedAttributesRepository,
     private readonly brandsRepository: SharedBrandsRepository,
     private readonly categoriesRepository: SharedCategoriesRepository,
     @Inject(TRENDYOL_SERVICE) private readonly trendyolClient: ClientProxy,
     @Inject(N11_SERVICE) private readonly n11Client: ClientProxy,
-  ) {}
-
-  async getProducts(ecommerceBrandId: string, filter: ProductFilterDto) {
-    const filterQuery = {
-      ...filter,
-      ecommerceBrandId: ecommerceBrandId,
-    };
-    return await this.productsRepository.filter(filterQuery);
+  ) {
+    super();
   }
 
   async createProducts(
@@ -87,11 +80,11 @@ export class ProductsService {
                 // Find the matching attribute objectS
                 const matchingAttribute =
                   categoryAttribute.categoryAttributes.find(
-                    (attr) => attr.attribute.id === attribute.id,
+                    (attr) => attr.attribute.id === attribute.attributeId,
                   );
 
                 if (matchingAttribute) {
-                  attribute.name = matchingAttribute.attribute.name;
+                  attribute.attributeName = matchingAttribute.attribute.name;
                 }
               }
             }
@@ -144,11 +137,11 @@ export class ProductsService {
     }
 
     if (productsToEmit.length > 0) {
-      this.getClient('trendyol').emit(
-        SYNC_PRODUCTS_WITH_ECOMMERCE,
-        productsToEmit,
-      );
-      this.getClient('n11').emit(SYNC_PRODUCTS_WITH_ECOMMERCE, productsToEmit);
+      // this.getClient('trendyol').emit(
+      //   SYNC_PRODUCTS_WITH_ECOMMERCE,
+      //   productsToEmit,
+      // );
+      // this.getClient('n11').emit(SYNC_PRODUCTS_WITH_ECOMMERCE, productsToEmit);
     }
 
     return products;
@@ -259,12 +252,6 @@ export class ProductsService {
     return data.data;
   }
 
-  async getCount(ecommerceBrandId: string) {
-    return await this.productsRepository.count({
-      ecommerceBrandId: ecommerceBrandId,
-    });
-  }
-
   async getCategories(filterQuery: CategoryFilterDto) {
     const filter: any = {};
 
@@ -296,9 +283,5 @@ export class ProductsService {
       ...category,
       subCategories,
     };
-  }
-
-  async getProduct(barcode: string) {
-    return await this.productsRepository.findOne({ barcode: barcode });
   }
 }

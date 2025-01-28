@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { CurrencyType, EcommerceProductFormData } from "@/utils/formDatas";
+import { CurrencyType, EcommerceProductFormData } from "@/utils/dataTypes";
 
 type ValidationSchema<T> = Yup.ObjectSchema<T>;
 

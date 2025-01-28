@@ -1,6 +1,7 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import {
+  N11_ORDER_SYNC_JOB,
   N11_SERVICE,
   TRENDYOL_ORDER_SYNC_JOB,
   TRENDYOL_SERVICE,
@@ -18,9 +19,9 @@ export class JobsService {
     this.logger.debug('JobsService initialized');
   }
 
-  // @Cron(CronExpression.EVERY_10_SECONDS)
-  // handleCron() {
-  //   this.trendyolClient.emit(TRENDYOL_ORDER_SYNC_JOB, {});
-  //   this.n11Client.emit(TRENDYOL_ORDER_SYNC_JOB, {});
-  // }
+  @Cron(CronExpression.EVERY_MINUTE)
+  handleCron() {
+    this.trendyolClient.emit(TRENDYOL_ORDER_SYNC_JOB, {});
+    // this.n11Client.emit(N11_ORDER_SYNC_JOB, {});
+  }
 }

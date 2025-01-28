@@ -8,13 +8,16 @@ import {
   Post,
   Query,
   Put,
+  Param,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { BrandSettingsGuard } from '@app/common/brand-settings/brand-settings.guard';
 import {
   AcknowledgePipe,
+  CurrentUser,
   JwtAuthGuard,
   SYNC_PRODUCTS_WITH_ECOMMERCE,
+  UserDto,
 } from '@app/common';
 import { CurrentEcommerceBrand } from '@app/common/decorators/current-ecommerce-brand.decorator';
 import { BrandSettingsDocument } from '@app/common/brand-settings/models/brand-settings.schema';
@@ -29,10 +32,27 @@ import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 import { GetRemoteProductFilterDto } from '../dto/get-remote-product-filter.dto';
 import { UpdateProductDto } from '../dto/update-product.dto';
+import { ProductFilterDto } from '../../../e-commerce/src/dto/product-filter-dto';
+import { AbstractProductsController } from '@app/common/shared-db/controllers/abstract-products.controller';
 
 @Controller('products')
-export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+export class ProductsController extends AbstractProductsController<ProductsService> {
+  constructor(protected readonly productsService: ProductsService) {
+    super();
+  }
+
+  @Post('send-to-platforms')
+  @UseGuards(BrandSettingsGuard)
+  @UseGuards(JwtAuthGuard)
+  async sendToPlatforms(
+    @CurrentEcommerceBrand() currentEcommerceBrand: BrandSettingsDocument,
+    @Body() barcodes: string[],
+  ) {
+    return await this.productsService.sendToPlatforms(
+      currentEcommerceBrand,
+      barcodes,
+    );
+  }
 
   @Get('remote')
   @UseGuards(BrandSettingsGuard)
@@ -89,11 +109,5 @@ export class ProductsController {
     }
 
     await this.productsService.createProducts(currentEcommerceBrand, data);
-  }
-
-  @Get()
-  @UseGuards(JwtAuthGuard)
-  async getProducts() {
-    return this.productsService.getProducts();
   }
 }

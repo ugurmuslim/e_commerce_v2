@@ -6,7 +6,7 @@ import {
   Attributes,
   EcommerceProductFormData,
   initialProductFormData,
-} from "@/utils/formDatas";
+} from "@/utils/dataTypes";
 import {
   fetchAttributes,
   mapFilters,
@@ -21,6 +21,7 @@ import {
   validateForm,
 } from "@/utils/FormValidations";
 import "@/css/custom.css";
+import Varianter from "@/components/Products/Varianter";
 
 const Create = (product: { product: EcommerceProductFormData }) => {
   const [formData, setFormData] = useState<EcommerceProductFormData>(
@@ -28,6 +29,15 @@ const Create = (product: { product: EcommerceProductFormData }) => {
   );
   const [errors, setErrors] = useState<FormErrors>({});
   const [attributes, setAttributes] = useState<Attributes[]>([]);
+  const [variants, setVariants] = useState([]);
+
+  const addVariant = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setVariants([
+      ...variants,
+      <Varianter key={variants.length} variantAttributes={} />,
+    ]);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,16 +75,18 @@ const Create = (product: { product: EcommerceProductFormData }) => {
       if (attributeIndex !== -1) {
         const updatedAttributes = [...formData.attributes];
         updatedAttributes[attributeIndex] = {
-          name: attributeName,
-          id: attributeId,
-          attributeValues: value,
+          attributeName: attributeName,
+          attributeId: attributeId,
+          attributeValue: value.name,
+          attributeValueId: value.id,
         };
         formData.attributes = updatedAttributes;
       } else {
         formData.attributes.push({
-          name: attributeName,
-          id: attributeId,
-          attributeValues: value,
+          attributeName: attributeName,
+          attributeId: attributeId,
+          attributeValue: value.name,
+          attributeValueId: value.id,
         });
       }
 
@@ -341,57 +353,77 @@ const Create = (product: { product: EcommerceProductFormData }) => {
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-          {attributes?.map((attribute, key) =>
-            !attribute.allowCustom ? (
-              <div key={key}>
-                <label className="mb-2.5 block font-medium text-black dark:text-white">
-                  {attribute.attribute.name}
-                </label>
-                <SelectGroupTwo
-                  type={`attributes.${attribute.attribute.name}.${attribute.attribute.id}`}
-                  handleInputChange={handleInputChange}
-                  parentData={
-                    Array.isArray(attribute.attributeValues)
-                      ? attribute.attributeValues
-                      : []
-                  }
-                  selectedValue={
-                    formData.attributes.find(
-                      (attr) => attr.id == attribute.attribute.id,
-                    ) && {
-                      id: formData.attributes.find(
-                        (attr) => attr.id == attribute.attribute.id,
-                      )?.attributeValues.id,
-                      name: formData.attributes.find(
-                        (attr) => attr.id == attribute.attribute.id,
-                      )?.attributeValues.name,
-                    }
-                  }
-                />
-              </div>
-            ) : (
-              <div key={key}>
-                <label className="mb-2.5 block font-medium text-black dark:text-white">
-                  {attribute.attribute.name}
-                </label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    name={`attributes.${attribute.attribute.name}.${attribute.attribute.id}`}
-                    onChange={handleInputChange}
-                    value={
-                      formData.attributes.find(
-                        (attr) => attr.id == attribute.attribute.id,
-                      )?.attributeValues.name
-                    }
-                    placeholder={attribute.attribute.name}
-                    required={attribute.required}
-                    className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                  />
-                </div>
-              </div>
-            ),
-          )}
+          {attributes?.map((attribute, key) => {
+            if (!attribute.varianter) {
+              if (!attribute.allowCustom) {
+                // Case: varianter is false, allowCustom is false
+                return (
+                  <div key={key}>
+                    <label className="mb-2.5 block font-medium text-black dark:text-white">
+                      {attribute.attribute.name}
+                    </label>
+                    <SelectGroupTwo
+                      type={`attributes.${attribute.attribute.name}.${attribute.attribute.id}`}
+                      handleInputChange={handleInputChange}
+                      parentData={
+                        Array.isArray(attribute.attributeValues)
+                          ? attribute.attributeValues
+                          : []
+                      }
+                      selectedValue={
+                        formData.attributes.find(
+                          (attr) => attr.attributeId == attribute.attribute.id,
+                        ) && {
+                          id: formData.attributes.find(
+                            (attr) =>
+                              attr.attributeId == attribute.attribute.id,
+                          )?.attributeValueId,
+                          name: formData.attributes.find(
+                            (attr) =>
+                              attr.attributeId == attribute.attribute.id,
+                          )?.attributeValue,
+                        }
+                      }
+                    />
+                  </div>
+                );
+              } else {
+                // Case: varianter is false, allowCustom is true
+                return (
+                  <div key={key}>
+                    <label className="mb-2.5 block font-medium text-black dark:text-white">
+                      {attribute.attribute.name}
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        name={`attributes.${attribute.attribute.name}.${attribute.attribute.id}`}
+                        onChange={handleInputChange}
+                        value={
+                          formData.attributes.find(
+                            (attr) =>
+                              attr.attributeId == attribute.attribute.id,
+                          )?.attributeValue
+                        }
+                        placeholder={attribute.attribute.name}
+                        required={attribute.required}
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      />
+                    </div>
+                  </div>
+                );
+              }
+            }
+          })}
+        </div>
+        <div className="relative w-full">
+          <button
+            className="hover:bg-primary-dark absolute right-4 top-4 z-10 rounded-lg bg-primary px-4 py-2 text-white focus:outline-none"
+            onClick={addVariant}
+          >
+            Varyant Ekle
+          </button>
+          <div className="mt-6">{variants}</div>
         </div>
         <div className="mt-10">
           <input

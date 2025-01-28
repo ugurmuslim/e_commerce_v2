@@ -18,7 +18,7 @@ export class SharedProductsRepository extends AbstractRepository<SharedProductsD
 
   async createProduct(
     document: Omit<SharedProductsDocument, '_id'>,
-  ): Promise<{ success: boolean }> {
+  ): Promise<void> {
     try {
       await this.create(document); // Assuming this is a method that interacts with DB or another service
     } catch (error: unknown) {
@@ -26,7 +26,7 @@ export class SharedProductsRepository extends AbstractRepository<SharedProductsD
         this.logger.error('Error creating product:', error.stack);
         throw new Error(error.message);
       } else {
-        this.logger.error('Error creating product:', error.stack);
+        this.logger.error('Error creating product:', error);
         throw new Error('An unknown error occurred.');
       }
     }

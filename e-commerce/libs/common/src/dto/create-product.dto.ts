@@ -3,7 +3,6 @@ import {
   IsDefined,
   IsNotEmpty,
   IsNumber,
-  IsObject,
   IsOptional,
   IsString,
   ValidateNested,
@@ -17,21 +16,21 @@ export class ImageDto {
 }
 
 export class AttributesDto {
+  @IsOptional()
   @IsNumber()
-  @IsNotEmpty()
-  id: number;
+  attributeId?: number;
 
   @IsOptional()
-  name: string;
+  @IsString()
+  attributeName?: string;
 
   @IsOptional()
-  customAttributeValue?: string | number;
+  @IsString()
+  attributeValue?: string;
 
   @IsOptional()
-  attributeValues: {
-    id: number;
-    name: string;
-  };
+  @IsNumber()
+  attributeValueId?: number;
 }
 
 export class CreateProductDto {
@@ -91,7 +90,7 @@ export class CreateProductDto {
   @IsOptional()
   @IsNumber()
   @IsNotEmpty()
-  brandId?: number;
+  brandId: number;
 }
 
 export class CreateProductRequestDto {

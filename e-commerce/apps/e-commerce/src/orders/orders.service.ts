@@ -1,29 +1,32 @@
-import {Injectable} from '@nestjs/common';
-import {OrderSyncDto} from '@app/common/dto/order-sync.dto';
-import {ProductsService} from '../products/products.service';
-import {SharedOrdersRepository} from '@app/common/shared-db/repositories/shared-orders.repository';
+import { Injectable } from '@nestjs/common';
+import { OrderSyncDto } from '@app/common/dto/order-sync.dto';
+import { ProductsService } from '../products/products.service';
+import { SharedOrdersRepository } from '@app/common/shared-db/repositories/shared-orders.repository';
+import { AbstractOrdersService } from '@app/common';
 
 @Injectable()
-export class OrdersService {
-    constructor(
-        private readonly productsService: ProductsService,
-        private readonly ordersRepository: SharedOrdersRepository,
-    ) {
-    }
+export class OrdersService extends AbstractOrdersService<SharedOrdersRepository> {
+  constructor(
+    private readonly productsService: ProductsService,
+    protected readonly ordersRepository: SharedOrdersRepository,
+  ) {
+    super();
+  }
 
-    async syncOrders(data: OrderSyncDto) {
-        await this.ordersRepository.create(data);
-        for (const item of data.lines) {
-            this.productsService.updateProductQuantity(
-                item.barcode,
-                item.quantity,
-                data.ecommerceBrandId,
-            );
-        }
-    }
+  async syncOrders(ecommerceBrandId: string, data: OrderSyncDto[]) {
+    for (const order of data) {
+      await this.ordersRepository.create({
+        ...order,
+        ecommerceBrandId,
+      });
 
-    async getCounts(ecommerceBrandId: string) {
-        return await this.ordersRepository.count({ecommerceBrandId: ecommerceBrandId});
+      for (const item of order.lines) {
+        this.productsService.updateProductQuantity(
+          item.barcode,
+          item.quantity,
+          ecommerceBrandId,
+        );
+      }
     }
-
+  }
 }
